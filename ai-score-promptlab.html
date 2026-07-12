@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Score™ | Diagnóstico IA para Emprendedores</title>
+  <meta name="description" content="Descubre tu AI Score™ y conoce qué tan preparado está tu negocio para usar Inteligencia Artificial." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #050505;
+      --bg-card: rgba(18, 18, 22, 0.82);
+      --bg-soft: #101014;
+      --blue: #3177F3;
+      --blue-2: #00A3FF;
+      --white: #FFFFFF;
+      --gray: #A7A7A7;
+      --gray-2: #777777;
+      --line: rgba(255,255,255,0.11);
+      --success: #48F7A4;
+      --warning: #FFD166;
+      --danger: #FF5C7A;
+      --radius: 24px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(49, 119, 243, 0.28), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(0, 163, 255, 0.16), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(49, 119, 243, 0.13), transparent 35%),
+        var(--bg-main);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 86%);
+      z-index: 0;
+    }
+
+    .orb {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(49,119,243,0.32), transparent 62%);
+      filter: blur(18px);
+      top: -130px;
+      right: -140px;
+      pointer-events: none;
+      z-index: 0;
+      animation: pulseOrb 7s ease-in-out infinite;
+    }
+
+    @keyframes pulseOrb {
+      0%, 100% { transform: scale(1); opacity: .85; }
+      50% { transform: scale(1.15); opacity: .55; }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 50px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 42px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(49,119,243,0.48);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 50%, #050505 0 56%, #0b1424 57% 100%),
+        #050505;
+      box-shadow: none;
+      overflow: hidden;
+      padding: 7px;
+    }
+
+    .brand-mark img,
+    .score-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      filter: drop-shadow(0 0 10px rgba(49,119,243,0.75));
+    }
+
+    .brand-mark img {
+      width: 96%;
+      height: 96%;
+      filter: none;
+    }
+
+    .score-logo-img {
+      width: 112px;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 176.09 / 115.79;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 15px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .brand-text span { display: block; color: var(--gray); font-size: 12px; margin-top: 3px; }
+
+    .header-pill {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--gray);
+      font-size: 13px;
+      background: rgba(255,255,255,0.035);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: center;
+      min-height: calc(100vh - 160px);
+    }
+
+    .hero-card, .quiz-card, .result-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035));
+      backdrop-filter: blur(24px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card { padding: clamp(28px, 5vw, 58px); position: relative; overflow: hidden; }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(49,119,243,0.36), transparent 70%);
+      right: -80px;
+      top: -80px;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--blue-2);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 18px var(--blue);
+    }
+
+    h1 {
+      font-family: 'Oxanium', sans-serif;
+      font-size: clamp(42px, 7vw, 86px);
+      line-height: .92;
+      letter-spacing: -0.055em;
+      max-width: 760px;
+      margin-bottom: 20px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #fff, #8eb7ff 45%, #3177F3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      color: #D6D6D6;
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.65;
+      max-width: 680px;
+      margin-bottom: 26px;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 22px; }
+
+    button, .button-link {
+      border: 0;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      border-radius: 999px;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border .18s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      padding: 15px 22px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 18px 44px rgba(49,119,243,0.32);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 22px 54px rgba(49,119,243,0.42); }
+
+    .btn-secondary {
+      padding: 14px 20px;
+      color: var(--white);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.055);
+    }
+
+    .btn-secondary:hover { transform: translateY(-2px); border-color: rgba(49,119,243,0.65); }
+    .small-note { color: var(--gray-2); font-size: 13px; line-height: 1.6; }
+
+    .side-panel {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--line);
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-preview { height: 100%; display: grid; place-items: center; text-align: center; }
+
+    .score-ring {
+      width: 250px;
+      height: 250px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.11);
+      background:
+        conic-gradient(from 180deg, var(--blue), var(--blue-2), rgba(255,255,255,0.08), rgba(255,255,255,0.08)),
+        radial-gradient(circle at center, #0b0b0d 0 60%, transparent 61%);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 22px;
+      box-shadow: inset 0 0 50px rgba(49,119,243,0.14), 0 0 70px rgba(49,119,243,0.18);
+    }
+
+    .score-ring-inner {
+      width: 184px;
+      height: 184px;
+      border-radius: 999px;
+      background: #050505;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid rgba(49,119,243,0.26);
+      box-shadow: inset 0 0 34px rgba(49,119,243,0.14);
+      padding: 32px;
+    }
+
+    .score-logo-caption {
+      display: block;
+      color: var(--gray);
+      font-size: 11px;
+      margin-top: 2px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .score-ring h2 { font-family: 'Oxanium', sans-serif; font-size: 54px; letter-spacing: -0.06em; }
+    .score-ring span { display: block; color: var(--gray); font-size: 12px; margin-top: 4px; letter-spacing: .16em; text-transform: uppercase; }
+    .panel-title { font-family: 'Oxanium', sans-serif; font-size: 24px; margin-bottom: 8px; }
+    .panel-copy { color: var(--gray); line-height: 1.6; font-size: 14px; max-width: 360px; margin: 0 auto; }
+
+    .hidden { display: none !important; }
+
+    .quiz-wrap { max-width: 880px; margin: 0 auto; padding-top: 12px; }
+    .quiz-card { padding: clamp(24px, 4vw, 42px); overflow: hidden; }
+    .progress-top { margin-bottom: 28px; }
+    .progress-meta { display: flex; justify-content: space-between; align-items: center; color: var(--gray); font-size: 13px; margin-bottom: 10px; }
+
+    .progress-track { width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--blue-2)); border-radius: 999px; transition: width .32s ease; box-shadow: 0 0 28px rgba(49,119,243,0.5); }
+
+    .question-kicker { color: var(--blue-2); font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 12px; }
+    .question-title { font-family: 'Oxanium', sans-serif; font-size: clamp(26px, 4vw, 42px); line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 14px; }
+    .question-help { color: var(--gray); line-height: 1.6; margin-bottom: 24px; }
+
+    .options { display: grid; gap: 12px; }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      padding: 18px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.11);
+      background: rgba(255,255,255,0.045);
+      color: var(--white);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .option:hover { border-color: rgba(49,119,243,0.68); background: rgba(49,119,243,0.11); transform: translateY(-1px); }
+    .option.selected { border-color: var(--blue); background: rgba(49,119,243,0.18); box-shadow: 0 0 0 1px rgba(49,119,243,0.18); }
+    .option-text strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .option-text span { color: var(--gray); font-size: 13px; line-height: 1.45; }
+
+    .option-score {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--gray);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quiz-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+    .btn-disabled { opacity: .45; pointer-events: none; }
+
+    .loading { text-align: center; padding: 56px 24px; }
+    .loader { width: 92px; height: 92px; margin: 0 auto 26px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.1); border-top-color: var(--blue); border-right-color: var(--blue-2); animation: spin 1s linear infinite; box-shadow: 0 0 38px rgba(49,119,243,0.25); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading h2 { font-family: 'Oxanium', sans-serif; font-size: 30px; margin-bottom: 8px; }
+    .loading p { color: var(--gray); }
+
+    .result-card { max-width: 980px; margin: 0 auto; padding: clamp(24px, 4vw, 44px); }
+    .result-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 28px; align-items: stretch; }
+
+    .result-score-box { border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,0.04); padding: 24px; display: grid; place-items: center; text-align: center; }
+
+    .big-score {
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        conic-gradient(var(--blue) var(--score-angle, 0deg), rgba(255,255,255,0.08) 0),
+        radial-gradient(circle at center, #08080a 0 61%, transparent 62%);
+      box-shadow: 0 0 70px rgba(49,119,243,0.18);
+    }
+
+    .big-score-inner { width: 160px; height: 160px; border-radius: 999px; background: rgba(5,5,5,0.95); display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.08); }
+    .big-score-value { font-family: 'Oxanium', sans-serif; font-size: 54px; line-height: .9; letter-spacing: -0.06em; }
+    .big-score-label { color: var(--gray); font-size: 12px; text-transform: uppercase; letter-spacing: .18em; margin-top: 6px; }
+
+    .level-pill { display: inline-flex; padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(49,119,243,0.5); color: #DCE9FF; background: rgba(49,119,243,0.15); font-size: 13px; font-weight: 800; }
+    .result-content h2 { font-family: 'Oxanium', sans-serif; font-size: clamp(30px, 5vw, 54px); line-height: 1.02; letter-spacing: -0.045em; margin-bottom: 12px; }
+    .result-content p { color: #D0D0D0; line-height: 1.7; margin-bottom: 18px; }
+
+    .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 22px 0; }
+    .insight-card { border: 1px solid var(--line); background: rgba(255,255,255,0.04); border-radius: 18px; padding: 18px; }
+    .insight-card h3 { font-family: 'Oxanium', sans-serif; font-size: 17px; margin-bottom: 10px; }
+    .insight-card ul { list-style: none; display: grid; gap: 8px; }
+    .insight-card li { color: var(--gray); font-size: 14px; line-height: 1.45; padding-left: 20px; position: relative; }
+    .insight-card li::before { content: "•"; position: absolute; left: 4px; color: var(--blue-2); font-weight: 800; }
+
+    .lead-form { margin-top: 22px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,0.035); }
+    .lead-form h3 { font-family: 'Oxanium', sans-serif; font-size: 22px; margin-bottom: 8px; }
+    .lead-form p { color: var(--gray); margin-bottom: 16px; font-size: 14px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: grid; gap: 7px; }
+    label { color: var(--gray); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+    input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      background: rgba(0,0,0,0.26);
+      color: var(--white);
+      padding: 14px 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: border .16s ease, box-shadow .16s ease;
+    }
+
+    input:focus { border-color: rgba(49,119,243,0.75); box-shadow: 0 0 0 3px rgba(49,119,243,0.12); }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; align-items: center; }
+
+    .report-box { margin-top: 20px; border: 1px solid rgba(49,119,243,0.32); border-radius: 20px; padding: 18px; background: rgba(49,119,243,0.09); }
+    .report-code { font-family: 'Oxanium', sans-serif; font-size: 26px; letter-spacing: .05em; margin: 8px 0 14px; }
+
+
+    .starter-form {
+      max-width: 520px;
+      margin: 0 0 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .starter-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .delivery-intro {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 28px;
+    }
+
+    .delivery-intro h2 {
+      font-family: 'Oxanium', sans-serif;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      margin-bottom: 12px;
+    }
+
+    .delivery-intro p {
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    .delivery-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .delivery-option {
+      width: 100%;
+      text-align: left;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.11);
+      background: rgba(255,255,255,0.045);
+      color: var(--white);
+      display: block;
+    }
+
+    .delivery-option:hover {
+      border-color: rgba(49,119,243,0.68);
+      background: rgba(49,119,243,0.11);
+      transform: translateY(-1px);
+    }
+
+    .delivery-option.selected {
+      border-color: var(--blue);
+      background: rgba(49,119,243,0.18);
+      box-shadow: 0 0 0 1px rgba(49,119,243,0.18);
+    }
+
+    .delivery-option strong {
+      display: block;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 20px;
+      margin-bottom: 7px;
+    }
+
+    .delivery-option span {
+      color: var(--gray);
+      font-size: 14px;
+      line-height: 1.55;
+      display: block;
+    }
+
+    .delivery-badge {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(49,119,243,0.38);
+      background: rgba(49,119,243,0.11);
+      color: #DCE9FF;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    .final-status {
+      margin-top: 20px;
+      border: 1px solid rgba(49,119,243,0.32);
+      border-radius: 20px;
+      padding: 18px;
+      background: rgba(49,119,243,0.09);
+    }
+
+    .final-status h3 {
+      font-family: 'Oxanium', sans-serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .final-status p {
+      color: var(--gray);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+
+    .consent-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+      color: var(--gray);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .consent-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      flex: 0 0 auto;
+      accent-color: var(--blue);
+    }
+
+    .consent-row strong {
+      color: #EDEDED;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      color: white;
+      background: rgba(15,15,18,0.94);
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      transition: .25s ease;
+      z-index: 20;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    footer {
+      text-align: center;
+      color: var(--gray-2);
+      font-size: 12px;
+      padding: 24px 0 0;
+      letter-spacing: .04em;
+    }
+
+    footer strong {
+      color: #DCE9FF;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .side-panel { min-height: 320px; }
+      .result-grid { grid-template-columns: 1fr; }
+      .insights { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100% - 20px, 1120px); padding-top: 18px; }
+      header { align-items: flex-start; }
+      .header-pill { display: none; }
+      .hero-card { padding: 26px 20px; }
+      .hero-actions, .quiz-nav, .form-actions { flex-direction: column; align-items: stretch; }
+      .btn-primary, .btn-secondary, .button-link { width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+      .delivery-options { grid-template-columns: 1fr; }
+      .score-ring { width: 220px; height: 220px; }
+    }
+
+
+    /* ==========================================================
+       V4 · MODO QUIZ FULLSCREEN
+       Mantiene cada pregunta dentro de una sola pantalla en PC y móvil.
+       ========================================================== */
+    #screenQuiz.quiz-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      width: 100%;
+      max-width: none;
+      min-height: 100dvh;
+      padding: clamp(10px, 2vh, 22px) clamp(10px, 2vw, 26px);
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(49,119,243,0.24), transparent 34%),
+        radial-gradient(circle at 82% 20%, rgba(0,163,255,0.14), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(49,119,243,0.10), transparent 36%),
+        var(--bg-main);
+      overflow: hidden;
+    }
+
+    #screenQuiz.hidden {
+      display: none !important;
+    }
+
+    #screenQuiz .quiz-card {
+      width: min(980px, 100%);
+      height: min(760px, calc(100dvh - clamp(20px, 4vh, 44px)));
+      max-height: calc(100dvh - clamp(20px, 4vh, 44px));
+      padding: clamp(16px, 2.7vh, 30px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: clamp(18px, 2.5vw, 28px);
+    }
+
+    #screenQuiz .progress-top {
+      flex: 0 0 auto;
+      margin-bottom: clamp(10px, 1.8vh, 18px);
+    }
+
+    #screenQuiz .progress-meta {
+      font-size: clamp(11px, 1.5vh, 13px);
+      margin-bottom: clamp(6px, 1vh, 10px);
+    }
+
+    #screenQuiz .progress-track {
+      height: clamp(5px, .9vh, 8px);
+    }
+
+    #screenQuiz .question-kicker {
+      flex: 0 0 auto;
+      font-size: clamp(10px, 1.45vh, 13px);
+      margin-bottom: clamp(5px, .9vh, 10px);
+    }
+
+    #screenQuiz .question-title {
+      flex: 0 0 auto;
+      font-size: clamp(24px, 4.1vmin, 42px);
+      line-height: 1.02;
+      margin-bottom: clamp(7px, 1.2vh, 12px);
+      max-width: 100%;
+    }
+
+    #screenQuiz .question-help {
+      flex: 0 0 auto;
+      font-size: clamp(13px, 1.7vh, 16px);
+      line-height: 1.45;
+      margin-bottom: clamp(10px, 1.6vh, 18px);
+    }
+
+    #screenQuiz .options {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: repeat(5, minmax(0, 1fr));
+      gap: clamp(8px, 1.25vh, 12px);
+    }
+
+    #screenQuiz .option {
+      min-height: 0;
+      height: 100%;
+      align-items: center;
+      padding: clamp(10px, 1.6vh, 16px) clamp(12px, 1.9vh, 18px);
+      border-radius: clamp(14px, 2vh, 18px);
+    }
+
+    #screenQuiz .option-text strong {
+      font-size: clamp(13px, 1.9vh, 16px);
+      line-height: 1.15;
+      margin-bottom: clamp(2px, .6vh, 5px);
+    }
+
+    #screenQuiz .option-text span {
+      font-size: clamp(11px, 1.55vh, 13px);
+      line-height: 1.3;
+    }
+
+    #screenQuiz .option-score {
+      width: clamp(24px, 3vh, 28px);
+      height: clamp(24px, 3vh, 28px);
+      font-size: clamp(10px, 1.4vh, 12px);
+    }
+
+    #screenQuiz .quiz-nav {
+      flex: 0 0 auto;
+      margin-top: clamp(10px, 1.8vh, 18px);
+      align-items: center;
+    }
+
+    #screenQuiz .btn-primary,
+    #screenQuiz .btn-secondary {
+      padding: clamp(11px, 1.7vh, 15px) clamp(16px, 2.4vh, 22px);
+    }
+
+    @media (max-width: 560px) {
+      #screenQuiz.quiz-wrap {
+        padding: 10px;
+      }
+
+      #screenQuiz .quiz-card {
+        width: 100%;
+        height: calc(100dvh - 20px);
+        max-height: calc(100dvh - 20px);
+        padding: 16px;
+      }
+
+      #screenQuiz .question-title {
+        font-size: clamp(22px, 7vw, 30px);
+        letter-spacing: -0.04em;
+      }
+
+      #screenQuiz .quiz-nav {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      #screenQuiz .quiz-nav .btn-secondary,
+      #screenQuiz .quiz-nav .btn-primary {
+        width: auto;
+        flex: 1;
+      }
+    }
+
+    @media (max-height: 720px) {
+      #screenQuiz .question-help {
+        display: none;
+      }
+
+      #screenQuiz .option-text span {
+        display: none;
+      }
+
+      #screenQuiz .question-title {
+        font-size: clamp(21px, 4vmin, 34px);
+      }
+
+      #screenQuiz .quiz-card {
+        padding: clamp(12px, 2vh, 20px);
+      }
+    }
+
+    @media (max-height: 610px) {
+      #screenQuiz .question-kicker {
+        display: none;
+      }
+
+      #screenQuiz .option-score {
+        display: none;
+      }
+
+      #screenQuiz .progress-top {
+        margin-bottom: 8px;
+      }
+
+      #screenQuiz .quiz-nav {
+        margin-top: 8px;
+      }
+    }
+
+
+    /* ==========================================================
+       V5 · INICIO FULLSCREEN RESPONSIVE
+       La pantalla inicial se comporta como landing tipo app: 100dvh,
+       sin scroll, con contenido compacto en PC, tablet y celular.
+       ========================================================== */
+    body.intro-mode {
+      overflow: hidden;
+    }
+
+    body.intro-mode .app {
+      width: min(1180px, calc(100% - clamp(20px, 5vw, 48px)));
+      min-height: 100dvh;
+      height: 100dvh;
+      padding: clamp(14px, 2.2vh, 26px) 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    body.intro-mode header {
+      flex: 0 0 auto;
+      margin-bottom: clamp(10px, 2vh, 28px);
+    }
+
+    body.intro-mode .hero {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(310px, .85fr);
+      gap: clamp(14px, 2.5vw, 28px);
+      align-items: stretch;
+    }
+
+    body.intro-mode .hero-card,
+    body.intro-mode .side-panel {
+      min-height: 0;
+      height: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    body.intro-mode .hero-card {
+      padding: clamp(22px, 4.8vmin, 52px);
+    }
+
+    body.intro-mode .eyebrow {
+      margin-bottom: clamp(10px, 1.5vh, 18px);
+      font-size: clamp(11px, 1.5vh, 13px);
+    }
+
+    body.intro-mode h1 {
+      font-size: clamp(40px, 7.6vmin, 82px);
+      margin-bottom: clamp(12px, 2vh, 20px);
+    }
+
+    body.intro-mode .hero-copy {
+      font-size: clamp(15px, 2.15vmin, 20px);
+      line-height: 1.55;
+      margin-bottom: clamp(14px, 2vh, 22px);
+    }
+
+    body.intro-mode .starter-form {
+      margin-bottom: clamp(12px, 1.8vh, 18px);
+      padding: clamp(12px, 1.8vh, 16px);
+    }
+
+    body.intro-mode .hero-actions {
+      margin-bottom: clamp(10px, 1.5vh, 16px);
+    }
+
+    body.intro-mode .small-note {
+      max-width: 640px;
+      font-size: clamp(12px, 1.55vh, 13px);
+      line-height: 1.45;
+    }
+
+    body.intro-mode .side-panel {
+      padding: clamp(18px, 3vmin, 28px);
+    }
+
+    body.intro-mode .score-ring {
+      width: clamp(190px, 26vmin, 250px);
+      height: clamp(190px, 26vmin, 250px);
+      margin-bottom: clamp(12px, 2vh, 22px);
+    }
+
+    body.intro-mode .score-ring-inner {
+      width: 72%;
+      height: 72%;
+    }
+
+    body.intro-mode .score-ring h2 {
+      font-size: clamp(38px, 6vmin, 54px);
+    }
+
+    body.intro-mode .panel-title {
+      font-size: clamp(18px, 2.6vmin, 24px);
+      margin-bottom: clamp(6px, 1vh, 8px);
+    }
+
+    body.intro-mode .panel-copy {
+      font-size: clamp(12px, 1.65vmin, 14px);
+      line-height: 1.55;
+    }
+
+    body.intro-mode footer {
+      display: block;
+      flex: 0 0 auto;
+      padding: 8px 0 0;
+      font-size: clamp(10px, 1.35vmin, 12px);
+    }
+
+    @media (max-width: 900px) {
+      body.intro-mode .app {
+        width: min(100% - 24px, 720px);
+        padding: 14px 0;
+      }
+
+      body.intro-mode header {
+        margin-bottom: 12px;
+      }
+
+      body.intro-mode .hero {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      body.intro-mode .side-panel {
+        min-height: 0;
+        height: auto;
+        padding: 14px 16px;
+      }
+
+      body.intro-mode .score-preview {
+        display: grid;
+        place-items: center;
+      }
+
+      body.intro-mode .score-preview > div {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+      }
+
+      body.intro-mode .score-ring {
+        width: 96px;
+        height: 96px;
+        margin: 0;
+      }
+
+      body.intro-mode .score-ring h2 {
+        font-size: 26px;
+      }
+
+      body.intro-mode .score-ring span {
+        font-size: 8px;
+      }
+
+      body.intro-mode .panel-copy {
+        max-width: none;
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body.intro-mode .app {
+        width: calc(100% - 18px);
+        padding: 10px 0;
+      }
+
+      body.intro-mode header {
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      body.intro-mode .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+      }
+
+      body.intro-mode .brand-text strong {
+        font-size: 12px;
+        letter-spacing: .14em;
+      }
+
+      body.intro-mode .brand-text span {
+        font-size: 10px;
+      }
+
+      body.intro-mode .hero-card {
+        padding: clamp(18px, 5.2vw, 24px);
+      }
+
+      body.intro-mode h1 {
+        font-size: clamp(42px, 16vw, 64px);
+      }
+
+      body.intro-mode .hero-copy {
+        font-size: clamp(14px, 4vw, 16px);
+      }
+
+      body.intro-mode .starter-form {
+        padding: 12px;
+      }
+
+      body.intro-mode .starter-form input {
+        padding: 12px 13px;
+      }
+
+      body.intro-mode .btn-primary {
+        padding: 13px 18px;
+      }
+
+      body.intro-mode .side-panel {
+        display: none;
+      }
+    }
+
+    @media (max-height: 720px) and (min-width: 901px) {
+      body.intro-mode .app {
+        padding: 12px 0;
+      }
+
+      body.intro-mode header {
+        margin-bottom: 10px;
+      }
+
+      body.intro-mode h1 {
+        font-size: clamp(38px, 7vmin, 68px);
+      }
+
+      body.intro-mode .hero-copy {
+        line-height: 1.42;
+      }
+
+      body.intro-mode .score-ring {
+        width: clamp(170px, 24vmin, 220px);
+        height: clamp(170px, 24vmin, 220px);
+      }
+    }
+
+    @media (max-height: 640px) {
+      body.intro-mode .small-note,
+      body.intro-mode .panel-copy {
+        display: none;
+      }
+
+      body.intro-mode .hero-copy {
+        margin-bottom: 12px;
+      }
+
+      body.intro-mode .starter-form {
+        margin-bottom: 10px;
+      }
+    }
+
+  </style>
+</head>
+
+<body class="intro-mode">
+  <div class="orb"></div>
+
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTc2LjA5IDExNS43OSI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzMxNzdmMzsKICAgICAgfQoKICAgICAgLmNscy0xLCAuY2xzLTIgewogICAgICAgIHN0cm9rZS13aWR0aDogMHB4OwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbGw6ICNmZmY7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJDYXBhXzEtMiIgZGF0YS1uYW1lPSJDYXBhIDEiPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE3My43OCw2My41OWMuNDItNC4yNS4zNy04LjI3LS4xNS0xMS42My0uOTgtNi40LTIuMzktMTIuODktNS4xOS0xOS4wNS43MS0uOTUsMS4xMy0yLjEyLDEuMTMtMy4zOSwwLTMuMTMtMi41NC01LjY3LTUuNjctNS42Ny0uMjksMC0uNTguMDMtLjg2LjA3LTIuNzQtMy41NC02LjItNi44OC0xMC42LTkuOTEtNC44LTMuMzEtOS44OS01LjU1LTE0LjY4LTcuMDYtLjI4LTIuODctMi43LTUuMTItNS42NS01LjEyLTIuMDUsMC0zLjgzLDEuMDktNC44MywyLjcxLTUuODEtLjg2LTkuOTQtLjczLTEwLjUtLjcxaC0xNy44Yy0uNzktMi4xOC0yLjg4LTMuNzMtNS4zMy0zLjczLTMuMTMsMC01LjY3LDIuNTQtNS42Nyw1LjY3czIuNTQsNS42Nyw1LjY3LDUuNjdjLjU5LDAsMS4xNS0uMDksMS42OS0uMjVsMTUuMjQsMTYuOTMuMS4xczQuNjksNC40Miw3LjE2LDkuNzJsMi40Miw1LjE5Yy0xLjE1LDEuMDQtMS44OCwyLjU0LTEuODgsNC4yMSwwLDIuMSwxLjE1LDMuOTQsMi44NSw0LjkyLTMuODksMTEuNTQtNy45NywxOS42NC05LjI2LDIyLjEtLjM2LS4wNy0uNzMtLjExLTEuMTEtLjExLTIuNzUsMC01LjA0LDEuOTYtNS41Niw0LjU1aC0zOC4yNXYzLjM3aDM4LjZjLjM5LjksMSwxLjY3LDEuNzcsMi4yNmwtOS4wNiwxOS45M2MtLjA3LDAtLjEzLS4wMS0uMi0uMDEtMy4xMywwLTUuNjcsMi41NC01LjY3LDUuNjdzMi41NCw1LjY3LDUuNjcsNS42N2MyLjM0LDAsNC4zNC0xLjQxLDUuMjEtMy40M2gxNy41OGM3LjksMCwxNS40OS0yLDIyLjItNS4wOCwxLjAyLjk2LDIuMzksMS41NiwzLjksMS41NiwzLjEzLDAsNS42Ny0yLjU0LDUuNjctNS42NywwLS40NC0uMDUtLjg2LS4xNS0xLjI3LDQuNjMtMy4yMyw4LjQ4LTYuODYsMTEuMjEtMTAuNCwzLjc5LTQuOTIsNi41Mi0xMS4yOCw4LjIxLTE3Ljc5LDIuMzctLjY4LDQuMS0yLjg2LDQuMS01LjQ1LDAtMS44Ny0uOTEtMy41My0yLjMxLTQuNTZaTTEzMi43NiwxMy4xM2MxLjg1LS4yMSwzLjQyLTEuMyw0LjMtMi44NSw0LjQzLDEuNDIsOS4xMSwzLjQ5LDEzLjQ3LDYuNDksMy44NiwyLjY2LDYuOTMsNS42Miw5LjM5LDguNjktMS4wNSwxLjAzLTEuNywyLjQ2LTEuNyw0LjA0LDAsMS4xLjMyLDIuMTMuODYsMy0yLjQ3LDIuNDItNi45OCw2LjI0LTEyLjUsOC4zNi03LjMxLDIuNzktMTUuMzIsMy40OC0xNy42MywzLjYzLS4zNi0uNjEtLjgyLTEuMTYtMS4zOC0xLjYsNC4xNy0xNS41Niw1LjA2LTI3Ljc3LDUuMTgtMjkuNzdaTTEyMC44OSwzNi41MmMtMi42My01LjY1LTcuMjYtMTAuMTUtNy44Ni0xMC43MWwtMTQuOTEtMTYuNTZjLjQ3LS42LjgxLTEuMjksMS4wMS0yLjA1aDE3Ljc1Yy4wOCwwLDMuOTYtLjE1LDkuNTcuNjYuMTQsMi4xOSwxLjUsNC4wNCwzLjQyLDQuODZsLS40Ny0uMDJjMCwuMTQtLjcxLDEyLjgyLTUsMjguOTktLjEyLDAtLjI0LS4wMi0uMzYtLjAyLS4yNSwwLS40OS4wMi0uNzQuMDVsLTIuNDItNS4yWk0xMjQuNTQsNTIuOTljMS41My0uMTMsMi44OC0uODcsMy44Mi0xLjk3LDEuMzQuMTIsMTIuMjcsMS4xMywxOC44NSw0LjE2LDUuOTksMi43NSw5Ljg2LDUuNTIsMTIuNjksNy41NS41Ny40MSwxLjEuNzksMS41OSwxLjEzLDEuNjMsMS4xMywyLjc5LDIuMDcsMy40OCwyLjY3LS4wNy4yNC0uMTIuNDktLjE2Ljc0bC00OC43NCwxMC40MmMtLjI4LS42NC0uNjctMS4yMi0xLjE1LTEuNzIsMS4zNS0yLjU1LDUuNTctMTAuODgsOS42MS0yMi45OFpNMTQxLjUsMTA0LjI1Yy02LjIyLDIuODItMTMuMjQsNC42NC0yMC41NSw0LjY0aC0xNy4yM2MtLjI4LTEuMzktMS4wNy0yLjYtMi4xNy0zLjQybDkuMDUtMTkuOWMuMDksMCwuMTcuMDEuMjYuMDEsMS41NywwLDMtLjY0LDQuMDItMS42NywyLjAxLjg4LDkuOTgsNC40LDE1LjQxLDcuMzMsNS4wMiwyLjcsMTAuMTIsNy41MSwxMS43Nyw5LjEyLS40My44LS42OCwxLjcyLS42OCwyLjcsMCwuNDEuMDQuOC4xMywxLjE5Wk0xNjEuMTIsODkuMzNjLTIuNSwzLjI1LTYuMDEsNi41OC0xMC4yMyw5LjU2LTEuMDEtLjkzLTIuMzUtMS41LTMuODQtMS41LS45MywwLTEuOC4yMy0yLjU4LjYyLTEuNzEtMS42OS03LjA4LTYuNzctMTIuNTgtOS43My01LjI5LTIuODUtMTIuNjgtNi4xNC0xNS4yNC03LjI3bDQ4LjY2LTEwLjRjLjY1LDEuMzQsMS43OSwyLjM4LDMuMiwyLjg4LTEuNTksNS44NC00LjA2LDExLjUxLTcuNCwxNS44NFpNMTcwLjQ4LDYyLjQ4cy0uMDUsMC0uMDcsMGMtMS4zNCwwLTIuNTcuNDctMy41NCwxLjI0LS43OS0uNjYtMS45NC0xLjU3LTMuNDYtMi42My0uNDgtLjMzLTEtLjctMS41NS0xLjEtMi45NC0yLjEtNi45Ni00Ljk4LTEzLjI0LTcuODctNi4wMi0yLjc3LTE0Ljk4LTMuOTQtMTguNTgtNC4zMiwzLjIyLS4yNSwxMC42OC0xLjA5LDE3Ljc0LTMuNzksNi4yNy0yLjQsMTEuMjMtNi42NywxMy44Ny05LjI5LjY5LjMsMS40NS40NiwyLjI0LjQ2LjYxLDAsMS4yLS4xLDEuNzUtLjI4LDIuOTksNi42OSwzLjk3LDEzLjExLDQuNjYsMTcuNTYuNDQsMi44Ny41LDYuMzIuMTgsMTAuMDFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTkyLjQ1LDExMGMwLC43MS4xNCwxLjM5LjM3LDIuMDFoLTIxLjI0bC0yNC4zMi0zMi45MWgtMTMuMDN2MjYuODhjMS44NC43NywzLjEzLDIuNTgsMy4xMyw0LjcsMCwyLjgxLTIuMjgsNS4wOS01LjA5LDUuMDlzLTUuMDktMi4yOC01LjA5LTUuMDljMC0yLjEyLDEuMjktMy45MywzLjEzLTQuN3YtMzAuODJoMTguOTVsMjQuMzIsMzIuOTFoNy41N2wtMTYuMjMtMjMuNjZjLS4xNi4wMi0uMzMuMDItLjQ5LjAyLTIuODEsMC01LjA5LTIuMjgtNS4wOS01LjA5czIuMjgtNS4wOSw1LjA5LTUuMDljLjg5LDAsMS43My4yMywyLjQ2LjYzaDcuMzZsMTguNzItMTkuMzJ2LTI2LjA5bC0yNC4wNS0yMi41M0g5LjgzYy0uNzUsMS44OS0yLjU4LDMuMjItNC43MywzLjIyQzIuMjgsMTAuMTksMCw3LjkxLDAsNS4wOVMyLjI4LDAsNS4wOSwwYzIuMDgsMCwzLjg2LDEuMjUsNC42NiwzLjAzaDYwLjdsMjYuNDMsMjQuNzV2MjkuMzlsLTIwLjk5LDIxLjY1aC02LjQyYy4wMi4xNy4wMy4zNS4wMy41MywwLDEuMjEtLjQyLDIuMzEtMS4xMiwzLjE5bDE3LjUyLDI1LjU0aDYuODljLS4yMi42LS4zNCwxLjI0LS4zNCwxLjkyWk0yMi40MSw4OC40MXYtMTkuOTFoNDguMzNsMTUuNTEtMTUuOTR2LTE5Ljg4bC0yMC4yMS0xOS4yNkg1Ljk5djE2LjgxYy0xLjg0Ljc3LTMuMTMsMi41OC0zLjEzLDQuNywwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMi0xLjI5LTMuOTMtMy4xMy00Ljd2LTEyLjg3aDU0LjU0bDE3Ljg1LDE3LjAydjE2LjZsLTEzLjI0LDEzLjZIMTguNDh2MjMuODJjLTEuODUuNzYtMy4xNSwyLjU4LTMuMTUsNC43MSwwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMS0xLjI4LTMuOTEtMy4xLTQuNjlaTTEwLjkxLDEwNS45di00OC40aDU0Ljk3bDkuMDctOS4yOXYtMTEuMDZsLTEyLjc4LTEyLjEySDI2LjdjLS43OS0xLjc5LTIuNTgtMy4wMy00LjY2LTMuMDMtMi44MSwwLTUuMDksMi4yOC01LjA5LDUuMDlzMi4yOCw1LjA5LDUuMDksNS4wOWMyLjE1LDAsMy45OS0xLjM0LDQuNzMtMy4yMmgzMy44MmwxMC40Miw5Ljg4djcuNzdsLTYuNzksNi45Nkg2Ljk4djUyLjMzYy0xLjg0Ljc3LTMuMTMsMi41OC0zLjEzLDQuNywwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMi0xLjI5LTMuOTMtMy4xMy00LjdaIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=" alt="Logo Roberto Durán IA y Diseño"></div>
+        <div class="brand-text">
+          <strong>PromptLab Academy</strong>
+          <span>AI Score™ · Diagnóstico IA</span>
+        </div>
+      </div>
+      <div class="header-pill">Arquitectura Digital · IA Aplicada · Emprendedores</div>
+    </header>
+
+    <section id="screenIntro" class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Diagnóstico gratuito</div>
+        <h1>Descubre tu <span class="gradient-text">AI Score™</span></h1>
+        <p class="hero-copy">Mide qué tan preparado estás para usar Inteligencia Artificial en tu negocio, tu contenido y tu productividad diaria.</p>
+        <div class="starter-form">
+          <label for="starterName">Antes de comenzar</label>
+          <input id="starterName" type="text" placeholder="Escribe tu nombre" autocomplete="name" onkeydown="if(event.key === 'Enter'){ startQuiz(); }">
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="startQuiz()">Calcular mi AI Score™ <span>→</span></button>
+        </div>
+        <p class="small-note">En menos de 3 minutos descubre si estás usando la IA como principiante, emprendedor práctico o estratega. Calcula tu AI Score™ y recibe tu informe personalizado por correo, WhatsApp o ambos.</p>
+      </div>
+
+      <aside class="side-panel" id="infoPanel">
+        <div class="score-preview">
+          <div>
+            <div class="score-ring">
+              <div class="score-ring-inner">
+                <img class="score-logo-img" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTc2LjA5IDExNS43OSI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzMxNzdmMzsKICAgICAgfQoKICAgICAgLmNscy0xLCAuY2xzLTIgewogICAgICAgIHN0cm9rZS13aWR0aDogMHB4OwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbGw6ICNmZmY7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJDYXBhXzEtMiIgZGF0YS1uYW1lPSJDYXBhIDEiPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE3My43OCw2My41OWMuNDItNC4yNS4zNy04LjI3LS4xNS0xMS42My0uOTgtNi40LTIuMzktMTIuODktNS4xOS0xOS4wNS43MS0uOTUsMS4xMy0yLjEyLDEuMTMtMy4zOSwwLTMuMTMtMi41NC01LjY3LTUuNjctNS42Ny0uMjksMC0uNTguMDMtLjg2LjA3LTIuNzQtMy41NC02LjItNi44OC0xMC42LTkuOTEtNC44LTMuMzEtOS44OS01LjU1LTE0LjY4LTcuMDYtLjI4LTIuODctMi43LTUuMTItNS42NS01LjEyLTIuMDUsMC0zLjgzLDEuMDktNC44MywyLjcxLTUuODEtLjg2LTkuOTQtLjczLTEwLjUtLjcxaC0xNy44Yy0uNzktMi4xOC0yLjg4LTMuNzMtNS4zMy0zLjczLTMuMTMsMC01LjY3LDIuNTQtNS42Nyw1LjY3czIuNTQsNS42Nyw1LjY3LDUuNjdjLjU5LDAsMS4xNS0uMDksMS42OS0uMjVsMTUuMjQsMTYuOTMuMS4xczQuNjksNC40Miw3LjE2LDkuNzJsMi40Miw1LjE5Yy0xLjE1LDEuMDQtMS44OCwyLjU0LTEuODgsNC4yMSwwLDIuMSwxLjE1LDMuOTQsMi44NSw0LjkyLTMuODksMTEuNTQtNy45NywxOS42NC05LjI2LDIyLjEtLjM2LS4wNy0uNzMtLjExLTEuMTEtLjExLTIuNzUsMC01LjA0LDEuOTYtNS41Niw0LjU1aC0zOC4yNXYzLjM3aDM4LjZjLjM5LjksMSwxLjY3LDEuNzcsMi4yNmwtOS4wNiwxOS45M2MtLjA3LDAtLjEzLS4wMS0uMi0uMDEtMy4xMywwLTUuNjcsMi41NC01LjY3LDUuNjdzMi41NCw1LjY3LDUuNjcsNS42N2MyLjM0LDAsNC4zNC0xLjQxLDUuMjEtMy40M2gxNy41OGM3LjksMCwxNS40OS0yLDIyLjItNS4wOCwxLjAyLjk2LDIuMzksMS41NiwzLjksMS41NiwzLjEzLDAsNS42Ny0yLjU0LDUuNjctNS42NywwLS40NC0uMDUtLjg2LS4xNS0xLjI3LDQuNjMtMy4yMyw4LjQ4LTYuODYsMTEuMjEtMTAuNCwzLjc5LTQuOTIsNi41Mi0xMS4yOCw4LjIxLTE3Ljc5LDIuMzctLjY4LDQuMS0yLjg2LDQuMS01LjQ1LDAtMS44Ny0uOTEtMy41My0yLjMxLTQuNTZaTTEzMi43NiwxMy4xM2MxLjg1LS4yMSwzLjQyLTEuMyw0LjMtMi44NSw0LjQzLDEuNDIsOS4xMSwzLjQ5LDEzLjQ3LDYuNDksMy44NiwyLjY2LDYuOTMsNS42Miw5LjM5LDguNjktMS4wNSwxLjAzLTEuNywyLjQ2LTEuNyw0LjA0LDAsMS4xLjMyLDIuMTMuODYsMy0yLjQ3LDIuNDItNi45OCw2LjI0LTEyLjUsOC4zNi03LjMxLDIuNzktMTUuMzIsMy40OC0xNy42MywzLjYzLS4zNi0uNjEtLjgyLTEuMTYtMS4zOC0xLjYsNC4xNy0xNS41Niw1LjA2LTI3Ljc3LDUuMTgtMjkuNzdaTTEyMC44OSwzNi41MmMtMi42My01LjY1LTcuMjYtMTAuMTUtNy44Ni0xMC43MWwtMTQuOTEtMTYuNTZjLjQ3LS42LjgxLTEuMjksMS4wMS0yLjA1aDE3Ljc1Yy4wOCwwLDMuOTYtLjE1LDkuNTcuNjYuMTQsMi4xOSwxLjUsNC4wNCwzLjQyLDQuODZsLS40Ny0uMDJjMCwuMTQtLjcxLDEyLjgyLTUsMjguOTktLjEyLDAtLjI0LS4wMi0uMzYtLjAyLS4yNSwwLS40OS4wMi0uNzQuMDVsLTIuNDItNS4yWk0xMjQuNTQsNTIuOTljMS41My0uMTMsMi44OC0uODcsMy44Mi0xLjk3LDEuMzQuMTIsMTIuMjcsMS4xMywxOC44NSw0LjE2LDUuOTksMi43NSw5Ljg2LDUuNTIsMTIuNjksNy41NS41Ny40MSwxLjEuNzksMS41OSwxLjEzLDEuNjMsMS4xMywyLjc5LDIuMDcsMy40OCwyLjY3LS4wNy4yNC0uMTIuNDktLjE2Ljc0bC00OC43NCwxMC40MmMtLjI4LS42NC0uNjctMS4yMi0xLjE1LTEuNzIsMS4zNS0yLjU1LDUuNTctMTAuODgsOS42MS0yMi45OFpNMTQxLjUsMTA0LjI1Yy02LjIyLDIuODItMTMuMjQsNC42NC0yMC41NSw0LjY0aC0xNy4yM2MtLjI4LTEuMzktMS4wNy0yLjYtMi4xNy0zLjQybDkuMDUtMTkuOWMuMDksMCwuMTcuMDEuMjYuMDEsMS41NywwLDMtLjY0LDQuMDItMS42NywyLjAxLjg4LDkuOTgsNC40LDE1LjQxLDcuMzMsNS4wMiwyLjcsMTAuMTIsNy41MSwxMS43Nyw5LjEyLS40My44LS42OCwxLjcyLS42OCwyLjcsMCwuNDEuMDQuOC4xMywxLjE5Wk0xNjEuMTIsODkuMzNjLTIuNSwzLjI1LTYuMDEsNi41OC0xMC4yMyw5LjU2LTEuMDEtLjkzLTIuMzUtMS41LTMuODQtMS41LS45MywwLTEuOC4yMy0yLjU4LjYyLTEuNzEtMS42OS03LjA4LTYuNzctMTIuNTgtOS43My01LjI5LTIuODUtMTIuNjgtNi4xNC0xNS4yNC03LjI3bDQ4LjY2LTEwLjRjLjY1LDEuMzQsMS43OSwyLjM4LDMuMiwyLjg4LTEuNTksNS44NC00LjA2LDExLjUxLTcuNCwxNS44NFpNMTcwLjQ4LDYyLjQ4cy0uMDUsMC0uMDcsMGMtMS4zNCwwLTIuNTcuNDctMy41NCwxLjI0LS43OS0uNjYtMS45NC0xLjU3LTMuNDYtMi42My0uNDgtLjMzLTEtLjctMS41NS0xLjEtMi45NC0yLjEtNi45Ni00Ljk4LTEzLjI0LTcuODctNi4wMi0yLjc3LTE0Ljk4LTMuOTQtMTguNTgtNC4zMiwzLjIyLS4yNSwxMC42OC0xLjA5LDE3Ljc0LTMuNzksNi4yNy0yLjQsMTEuMjMtNi42NywxMy44Ny05LjI5LjY5LjMsMS40NS40NiwyLjI0LjQ2LjYxLDAsMS4yLS4xLDEuNzUtLjI4LDIuOTksNi42OSwzLjk3LDEzLjExLDQuNjYsMTcuNTYuNDQsMi44Ny41LDYuMzIuMTgsMTAuMDFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTkyLjQ1LDExMGMwLC43MS4xNCwxLjM5LjM3LDIuMDFoLTIxLjI0bC0yNC4zMi0zMi45MWgtMTMuMDN2MjYuODhjMS44NC43NywzLjEzLDIuNTgsMy4xMyw0LjcsMCwyLjgxLTIuMjgsNS4wOS01LjA5LDUuMDlzLTUuMDktMi4yOC01LjA5LTUuMDljMC0yLjEyLDEuMjktMy45MywzLjEzLTQuN3YtMzAuODJoMTguOTVsMjQuMzIsMzIuOTFoNy41N2wtMTYuMjMtMjMuNjZjLS4xNi4wMi0uMzMuMDItLjQ5LjAyLTIuODEsMC01LjA5LTIuMjgtNS4wOS01LjA5czIuMjgtNS4wOSw1LjA5LTUuMDljLjg5LDAsMS43My4yMywyLjQ2LjYzaDcuMzZsMTguNzItMTkuMzJ2LTI2LjA5bC0yNC4wNS0yMi41M0g5LjgzYy0uNzUsMS44OS0yLjU4LDMuMjItNC43MywzLjIyQzIuMjgsMTAuMTksMCw3LjkxLDAsNS4wOVMyLjI4LDAsNS4wOSwwYzIuMDgsMCwzLjg2LDEuMjUsNC42NiwzLjAzaDYwLjdsMjYuNDMsMjQuNzV2MjkuMzlsLTIwLjk5LDIxLjY1aC02LjQyYy4wMi4xNy4wMy4zNS4wMy41MywwLDEuMjEtLjQyLDIuMzEtMS4xMiwzLjE5bDE3LjUyLDI1LjU0aDYuODljLS4yMi42LS4zNCwxLjI0LS4zNCwxLjkyWk0yMi40MSw4OC40MXYtMTkuOTFoNDguMzNsMTUuNTEtMTUuOTR2LTE5Ljg4bC0yMC4yMS0xOS4yNkg1Ljk5djE2LjgxYy0xLjg0Ljc3LTMuMTMsMi41OC0zLjEzLDQuNywwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMi0xLjI5LTMuOTMtMy4xMy00Ljd2LTEyLjg3aDU0LjU0bDE3Ljg1LDE3LjAydjE2LjZsLTEzLjI0LDEzLjZIMTguNDh2MjMuODJjLTEuODUuNzYtMy4xNSwyLjU4LTMuMTUsNC43MSwwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMS0xLjI4LTMuOTEtMy4xLTQuNjlaTTEwLjkxLDEwNS45di00OC40aDU0Ljk3bDkuMDctOS4yOXYtMTEuMDZsLTEyLjc4LTEyLjEySDI2LjdjLS43OS0xLjc5LTIuNTgtMy4wMy00LjY2LTMuMDMtMi44MSwwLTUuMDksMi4yOC01LjA5LDUuMDlzMi4yOCw1LjA5LDUuMDksNS4wOWMyLjE1LDAsMy45OS0xLjM0LDQuNzMtMy4yMmgzMy44MmwxMC40Miw5Ljg4djcuNzdsLTYuNzksNi45Nkg2Ljk4djUyLjMzYy0xLjg0Ljc3LTMuMTMsMi41OC0zLjEzLDQuNywwLDIuODEsMi4yOCw1LjA5LDUuMDksNS4wOXM1LjA5LTIuMjgsNS4wOS01LjA5YzAtMi4xMi0xLjI5LTMuOTMtMy4xMy00LjdaIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=" alt="Logo Roberto Durán IA y Diseño">
+                <span class="score-logo-caption">AI Score™</span>
+              </div>
+            </div>
+            <h3 class="panel-title">No es un test genérico</h3>
+            <p class="panel-copy">Es un diagnóstico para identificar si estás usando la IA como principiante, usuario práctico, estratega o arquitecto digital.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="screenQuiz" class="quiz-wrap hidden">
+      <div class="quiz-card">
+        <div class="progress-top">
+          <div class="progress-meta">
+            <span id="questionCounter">Pregunta 1 de 12</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
+
+        <div class="question-kicker" id="questionCategory">Uso actual</div>
+        <h2 class="question-title" id="questionTitle">Pregunta</h2>
+        <p class="question-help" id="questionHelp">Selecciona la opción que mejor describa tu situación actual.</p>
+        <div class="options" id="optionsContainer"></div>
+
+        <div class="quiz-nav">
+          <button class="btn-secondary" id="backBtn" onclick="prevQuestion()">← Anterior</button>
+          <button class="btn-primary btn-disabled" id="nextBtn" onclick="nextQuestion()">Siguiente →</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenLoading" class="quiz-wrap hidden">
+      <div class="quiz-card loading">
+        <div class="loader"></div>
+        <h2>Calculando tu AI Score™</h2>
+        <p>Analizando tu nivel de uso, claridad estratégica y aplicación de IA en tu negocio...</p>
+      </div>
+    </section>
+
+    <section id="screenDelivery" class="quiz-wrap hidden">
+      <div class="quiz-card">
+        <div class="delivery-intro">
+          <div class="delivery-badge">Tu informe está listo</div>
+          <h2>¿Dónde quieres recibir tu informe?</h2>
+          <p>
+            Antes de mostrar tu AI Score™, completa tus datos para generar tu código único de diagnóstico y recibir la recomendación personalizada.
+          </p>
+        </div>
+
+        <div class="delivery-options">
+          <button class="delivery-option" id="deliveryEmail" type="button" onclick="selectDelivery('email')">
+            <strong>Recibir por correo</strong>
+            <span>Ideal si quieres guardar tu informe, revisarlo con calma y recibir futuras recomendaciones.</span>
+          </button>
+          <button class="delivery-option" id="deliveryWhatsapp" type="button" onclick="selectDelivery('whatsapp')">
+            <strong>Recibir por WhatsApp</strong>
+            <span>Ideal si quieres abrir conversación y recibir orientación rápida según tu resultado.</span>
+          </button>
+        </div>
+
+        <div class="lead-form">
+          <h3 id="deliveryFormTitle">Selecciona dónde quieres recibir tu informe</h3>
+          <p id="deliveryFormHelp">Todos los campos son obligatorios para generar tu código de diagnóstico.</p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="leadName">Nombre</label>
+              <input id="leadName" type="text" placeholder="Tu nombre" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="leadWhatsapp">WhatsApp</label>
+              <input id="leadWhatsapp" type="tel" placeholder="+57 300 000 0000" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="leadEmail">Correo</label>
+              <input id="leadEmail" type="email" placeholder="tu@email.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="leadBusiness">Tipo de negocio</label>
+              <input id="leadBusiness" type="text" placeholder="Ej: bordados, restaurante, consultoría">
+            </div>
+          </div>
+
+          <label class="consent-row" for="leadConsent">
+            <input id="leadConsent" type="checkbox">
+            <span>
+              <strong>Acepto recibir mi informe AI Score™</strong> y comunicaciones educativas/comerciales de PromptLab Academy relacionadas con inteligencia artificial, prompts y productividad. Puedo solicitar la baja respondiendo al correo.
+            </span>
+          </label>
+
+          <div class="form-actions">
+            <button class="btn-primary" id="submitLeadBtn" onclick="submitLeadAndShowResult()">Generar mi informe</button>
+            <button class="btn-secondary" onclick="restartQuiz()">Reiniciar diagnóstico</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenResult" class="hidden">
+      <div class="result-card">
+        <div class="result-grid">
+          <div class="result-score-box">
+            <div class="big-score" id="scoreCircle">
+              <div class="big-score-inner">
+                <div>
+                  <div class="big-score-value" id="scoreValue">0</div>
+                  <div class="big-score-label">AI Score™</div>
+                </div>
+              </div>
+            </div>
+            <div class="level-pill" id="levelPill">Nivel</div>
+          </div>
+
+          <div class="result-content">
+            <div class="eyebrow">Resultado del diagnóstico</div>
+            <h2 id="resultTitle">Tu nivel está listo</h2>
+            <p id="resultDescription"></p>
+
+            <div class="insights">
+              <div class="insight-card">
+                <h3>Fortalezas</h3>
+                <ul id="strengthsList"></ul>
+              </div>
+              <div class="insight-card">
+                <h3>Oportunidades</h3>
+                <ul id="opportunitiesList"></ul>
+              </div>
+            </div>
+
+            <div class="final-status">
+              <h3 id="finalDeliveryTitle">Informe generado</h3>
+              <p id="finalDeliveryText">Tu diagnóstico fue registrado correctamente.</p>
+            </div>
+
+            <div id="reportBox" class="report-box">
+              <p class="small-note">Tu código de diagnóstico:</p>
+              <div class="report-code" id="reportCode">PL-000000</div>
+              <div class="form-actions">
+                <a id="whatsappLink" class="button-link btn-primary" href="#" target="_blank" rel="noopener">Recíbelo también en WhatsApp <span>→</span></a>
+                <button class="btn-secondary" onclick="restartQuiz()">Repetir diagnóstico</button>
+              </div>
+              <p class="small-note" style="margin-top:12px;">Este código conecta tu resultado con tu informe. Después lo conectaremos con Google Sheets, WhatsAuto o WhatsApp API.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Powered by <strong>Roberto Duran</strong> · Arquitecto Digital</footer>
+  </main>
+
+  <div class="toast" id="toast">Copiado</div>
+
+  <script>
+    /************************************************************
+     * CONFIGURACIÓN GENERAL
+     * Cambia aquí tu número real de WhatsApp.
+     * Debe ir con código de país, sin +, sin espacios y sin guiones.
+     * Ejemplo Colombia: 573001234567
+     ************************************************************/
+    const CONFIG = {
+      whatsappNumber: "573232503496",
+      appsScriptUrl: "https://script.google.com/macros/s/AKfycbyykRFOchTEo-B5Uyvnn2T4LTpOnUv2EPg3APQwg4QlC9y7Bs7eCSZzQK3R9s9RS03P/exec",
+      brand: "PromptLab Academy",
+      product: "AI Score™"
+    };
+
+    const questions = [
+      {
+        category: "Uso actual",
+        title: "¿Con qué frecuencia utilizas herramientas de IA como ChatGPT, Gemini o Claude?",
+        help: "Elige la opción que mejor describa tu rutina actual.",
+        options: [
+          { text: "Nunca las uso", detail: "Sé que existen, pero todavía no las aplico.", value: 1 },
+          { text: "Las he probado pocas veces", detail: "He experimentado, pero sin constancia.", value: 2 },
+          { text: "Las uso algunas veces por semana", detail: "Las uso para tareas puntuales.", value: 3 },
+          { text: "Las uso casi todos los días", detail: "Ya forman parte de mi flujo de trabajo.", value: 4 },
+          { text: "Las uso como herramienta estratégica", detail: "Las aplico en contenido, ventas, procesos o sistemas.", value: 5 }
+        ]
+      },
+      {
+        category: "Calidad de prompts",
+        title: "Cuando le pides algo a la IA, normalmente escribes...",
+        help: "Esta pregunta mide qué tan estructuradas son tus instrucciones.",
+        options: [
+          { text: "Frases muy generales", detail: "Ej: hazme algo para vender.", value: 1 },
+          { text: "Peticiones simples", detail: "Ej: dame ideas para Instagram.", value: 2 },
+          { text: "Prompts con rol y tarea", detail: "Ej: actúa como experto y crea una publicación.", value: 3 },
+          { text: "Prompts con contexto, objetivo y tono", detail: "Ya agrego información importante.", value: 4 },
+          { text: "Prompts con metodología y restricciones", detail: "Uso estructuras avanzadas y criterios claros.", value: 5 }
+        ]
+      },
+      {
+        category: "Claridad estratégica",
+        title: "¿Qué tan claro tienes el objetivo antes de pedirle algo a la IA?",
+        help: "La IA responde mejor cuando sabe qué resultado debe lograr.",
+        options: [
+          { text: "Casi nunca lo tengo claro", detail: "Pido ayuda sin saber exactamente qué quiero.", value: 1 },
+          { text: "Tengo una idea general", detail: "Sé el tema, pero no el resultado esperado.", value: 2 },
+          { text: "Sé qué quiero, pero me cuesta explicarlo", detail: "Tengo el objetivo, pero no el prompt.", value: 3 },
+          { text: "Defino objetivo, público y formato", detail: "Ya organizo la solicitud antes de escribir.", value: 4 },
+          { text: "Defino objetivo, contexto, audiencia, formato y límites", detail: "Dirijo la IA de forma estratégica.", value: 5 }
+        ]
+      },
+      {
+        category: "Aplicación al negocio",
+        title: "¿Para qué usas principalmente la IA en tu negocio o vida diaria?",
+        help: "No se trata solo de usar IA, sino de aplicarla donde produce valor.",
+        options: [
+          { text: "No la uso todavía", detail: "Estoy en etapa de exploración.", value: 1 },
+          { text: "Para buscar ideas", detail: "La uso como lluvia de ideas.", value: 2 },
+          { text: "Para textos y publicaciones", detail: "La aplico en contenido básico.", value: 3 },
+          { text: "Para ventas, contenido y organización", detail: "Ya la conecto con tareas reales.", value: 4 },
+          { text: "Para campañas, procesos y activos digitales", detail: "La uso como parte del sistema de negocio.", value: 5 }
+        ]
+      },
+      {
+        category: "Calidad del resultado",
+        title: "¿Qué resultado obtienes normalmente cuando usas IA?",
+        help: "Evalúa si las respuestas te sirven directamente o requieren mucha corrección.",
+        options: [
+          { text: "Respuestas muy genéricas", detail: "Siento que no entiende mi negocio.", value: 1 },
+          { text: "Algunas ideas útiles", detail: "Me ayuda, pero no de forma consistente.", value: 2 },
+          { text: "Textos que debo corregir mucho", detail: "La respuesta sirve como borrador.", value: 3 },
+          { text: "Respuestas bastante útiles", detail: "Puedo aplicar buena parte del resultado.", value: 4 },
+          { text: "Resultados profesionales y accionables", detail: "La IA entrega material casi listo para usar.", value: 5 }
+        ]
+      },
+      {
+        category: "Criterio",
+        title: "¿Sabes diferenciar un prompt bueno de un prompt malo?",
+        help: "Esta habilidad es clave para dejar de depender de prompts copiados.",
+        options: [
+          { text: "No", detail: "Aún no sé qué hace bueno a un prompt.", value: 1 },
+          { text: "Más o menos", detail: "Lo intuyo, pero no tengo criterio claro.", value: 2 },
+          { text: "Sí, pero me cuesta mejorarlos", detail: "Detecto fallas, pero no siempre sé corregirlas.", value: 3 },
+          { text: "Sí, identifico qué les falta", detail: "Reconozco rol, contexto, formato y tono.", value: 4 },
+          { text: "Sí, además puedo reestructurarlos", detail: "Puedo convertir prompts débiles en prompts profesionales.", value: 5 }
+        ]
+      },
+      {
+        category: "Metodologías",
+        title: "¿Has usado alguna arquitectura de prompts?",
+        help: "Las arquitecturas ayudan a ordenar mejor las instrucciones.",
+        options: [
+          { text: "No sé qué es eso", detail: "Nunca he usado una metodología de prompts.", value: 1 },
+          { text: "He escuchado algo, pero no la uso", detail: "Me suena, pero no la aplico.", value: 2 },
+          { text: "Uso estructuras simples", detail: "Ej: rol + tarea + formato.", value: 3 },
+          { text: "Uso ROSE, CRAFT o similares", detail: "Ya aplico frameworks de forma práctica.", value: 4 },
+          { text: "Uso metodologías avanzadas", detail: "Incluyo briefing, restricciones y revisión crítica.", value: 5 }
+        ]
+      },
+      {
+        category: "Marketing y ventas",
+        title: "¿Usas IA para crear contenido que ayude a vender?",
+        help: "La IA puede ayudarte a crear contenido, pero también a estructurar mensajes comerciales.",
+        options: [
+          { text: "No la uso para ventas", detail: "Aún no la conecto con mi oferta.", value: 1 },
+          { text: "La uso para ideas sueltas", detail: "Me ayuda a pensar publicaciones.", value: 2 },
+          { text: "La uso para copies o captions", detail: "Creo textos, pero sin estrategia completa.", value: 3 },
+          { text: "La uso para anuncios, hooks y carruseles", detail: "Ya la aplico a contenido comercial.", value: 4 },
+          { text: "La uso para campañas y embudos", detail: "La conecto con estrategia, audiencia y conversión.", value: 5 }
+        ]
+      },
+      {
+        category: "Productividad",
+        title: "¿La IA ya te está ahorrando tiempo de forma real?",
+        help: "La productividad es una de las señales más claras de adopción efectiva.",
+        options: [
+          { text: "No", detail: "Todavía no la uso lo suficiente.", value: 1 },
+          { text: "Un poco", detail: "Me ayuda en tareas pequeñas.", value: 2 },
+          { text: "Sí, en algunas tareas", detail: "Ahorro tiempo en textos o ideas.", value: 3 },
+          { text: "Sí, de forma frecuente", detail: "La uso para avanzar más rápido.", value: 4 },
+          { text: "Sí, ya cambió mi forma de trabajar", detail: "La IA hace parte de mi sistema diario.", value: 5 }
+        ]
+      },
+      {
+        category: "Automatización",
+        title: "¿Has usado IA para crear procesos, sistemas o automatizaciones?",
+        help: "Este punto diferencia el uso básico del uso estratégico.",
+        options: [
+          { text: "No", detail: "Solo la he usado para preguntar o escribir.", value: 1 },
+          { text: "No, pero me interesa", detail: "Quiero aprender cómo hacerlo.", value: 2 },
+          { text: "He creado procesos simples", detail: "Uso instrucciones repetibles o plantillas.", value: 3 },
+          { text: "He creado flujos de trabajo", detail: "Uso IA para organizar tareas o contenido.", value: 4 },
+          { text: "He creado sistemas completos", detail: "Uso IA dentro de procesos comerciales o productivos.", value: 5 }
+        ]
+      },
+      {
+        category: "Necesidad actual",
+        title: "¿Cuál es tu mayor bloqueo con la IA?",
+        help: "Esto ayuda a identificar qué necesitas aprender primero.",
+        options: [
+          { text: "No sé por dónde empezar", detail: "Necesito bases claras.", value: 1 },
+          { text: "No sé qué escribirle", detail: "Me cuesta convertir ideas en prompts.", value: 2 },
+          { text: "Las respuestas me salen genéricas", detail: "Necesito mejorar contexto y estructura.", value: 3 },
+          { text: "No sé aplicarla a ventas o contenido", detail: "Necesito enfoque comercial.", value: 4 },
+          { text: "Quiero usarla de forma profesional", detail: "Busco sistemas, metodologías y activos digitales.", value: 5 }
+        ]
+      },
+      {
+        category: "Intención",
+        title: "Si existiera una metodología práctica para usar IA mejor, ¿qué tan interesado estarías?",
+        help: "Esta respuesta mide tu urgencia de aprendizaje.",
+        options: [
+          { text: "Solo tengo curiosidad", detail: "Quiero mirar, pero no es prioridad.", value: 1 },
+          { text: "Me interesa, pero no es urgente", detail: "Lo veo útil para más adelante.", value: 2 },
+          { text: "Me interesa aprender pronto", detail: "Quiero mejorar mi uso de IA.", value: 3 },
+          { text: "Lo necesito para mi negocio", detail: "Veo una oportunidad clara.", value: 4 },
+          { text: "Estoy buscando una solución ahora", detail: "Quiero aprender y aplicar cuanto antes.", value: 5 }
+        ]
+      }
+    ];
+
+    const levels = [
+      {
+        min: 0, max: 20, name: "Explorador IA", title: "Estás en etapa de descubrimiento",
+        description: "Tu AI Score™ muestra que estás comenzando a entender el potencial de la inteligencia artificial. Tu prioridad ahora es construir bases claras, aprender cómo funciona un prompt y evitar depender de instrucciones genéricas.",
+        strengths: ["Tienes una oportunidad grande de aprender sin malos hábitos.", "Estás en el punto ideal para construir una base sólida.", "Puedes avanzar rápido si aprendes una metodología simple."],
+        opportunities: ["Aprender qué es un prompt y cómo estructurarlo.", "Usar IA para tareas pequeñas de tu negocio o vida diaria.", "Practicar con frameworks básicos como RTF y ROSE."]
+      },
+      {
+        min: 21, max: 40, name: "Usuario Básico", title: "Ya usas IA, pero todavía sin dirección estratégica",
+        description: "Tu AI Score™ indica que ya estás probando herramientas como ChatGPT, pero probablemente tus prompts siguen siendo generales. Eso hace que recibas respuestas útiles, pero poco profesionales.",
+        strengths: ["Ya tienes curiosidad y contacto con herramientas de IA.", "Puedes identificar tareas donde la IA podría ayudarte.", "Estás listo para aprender estructuras simples y prácticas."],
+        opportunities: ["Mejorar tus prompts con rol, objetivo, contexto y formato.", "Dejar de pedir respuestas genéricas.", "Aplicar IA a contenido, ventas y productividad."]
+      },
+      {
+        min: 41, max: 60, name: "Emprendedor Práctico", title: "Ya aplicas IA, pero puedes elevar mucho la calidad",
+        description: "Tu AI Score™ muestra que ya usas IA en tareas reales. El siguiente paso es pasar de usos puntuales a una metodología más clara para crear contenido, campañas, prompts visuales y activos comerciales.",
+        strengths: ["Ya aplicas IA en tareas reales.", "Tienes base para mejorar tu productividad.", "Puedes aprender rápido arquitecturas más completas."],
+        opportunities: ["Usar frameworks como CRAFT y CO-STAR.", "Crear carruseles, anuncios y prompts visuales con mejor dirección.", "Convertir la IA en una herramienta comercial, no solo creativa."]
+      },
+      {
+        min: 61, max: 80, name: "Estratega IA", title: "Ya estás usando IA con intención comercial",
+        description: "Tu AI Score™ indica que tienes una buena base. Ya no necesitas solo prompts simples: necesitas procesos, restricciones, briefing, objetivos de negocio y metodologías como RISEN, ROBER y ROBER Pro.",
+        strengths: ["Tienes claridad para aplicar IA en negocio o productividad.", "Ya entiendes la importancia del contexto.", "Puedes construir prompts de mayor valor estratégico."],
+        opportunities: ["Crear sistemas de prompts para procesos repetibles.", "Usar ROBER para activos digitales profesionales.", "Mejorar campañas, contenidos y flujos comerciales con IA."]
+      },
+      {
+        min: 81, max: 100, name: "Arquitecto Digital", title: "Estás listo para dirigir la IA como un sistema profesional",
+        description: "Tu AI Score™ muestra un nivel avanzado. Tu reto ahora no es aprender prompts básicos, sino construir sistemas, metodologías, asistentes, campañas y activos digitales de alto impacto.",
+        strengths: ["Usas IA con visión estratégica.", "Tienes criterio para evaluar y mejorar instrucciones.", "Estás preparado para metodologías premium como ROBER Pro."],
+        opportunities: ["Crear sistemas propios de prompts para tu negocio.", "Diseñar flujos avanzados con IA, contenido y automatización.", "Convertir tu conocimiento en activos digitales o productos."]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let answers = new Array(questions.length).fill(null);
+    let resultData = null;
+    let generatedCode = "";
+    let prospectName = "";
+    let deliveryPreference = "";
+    let finalLeadData = null;
+
+    function startQuiz() {
+      const starterName = document.getElementById("starterName").value.trim();
+      if (!starterName) {
+        showToast("Escribe tu nombre para comenzar");
+        document.getElementById("starterName").focus();
+        return;
+      }
+
+      prospectName = starterName;
+      document.body.classList.remove("intro-mode");
+      document.getElementById("screenIntro").classList.add("hidden");
+      document.getElementById("screenQuiz").classList.remove("hidden");
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function scrollToInfo() {
+      document.getElementById("infoPanel").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("questionCounter").textContent = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+      document.getElementById("questionCategory").textContent = q.category;
+      document.getElementById("questionTitle").textContent = q.title;
+      document.getElementById("questionHelp").textContent = q.help;
+
+      const progress = Math.round((currentQuestion / questions.length) * 100);
+      document.getElementById("progressPercent").textContent = `${progress}%`;
+      document.getElementById("progressBar").style.width = `${progress}%`;
+
+      const container = document.getElementById("optionsContainer");
+      container.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const selected = answers[currentQuestion]?.index === index;
+        const btn = document.createElement("button");
+        btn.className = `option ${selected ? "selected" : ""}`;
+        btn.type = "button";
+        btn.onclick = () => selectOption(index, option.value);
+        btn.innerHTML = `
+          <div class="option-text">
+            <strong>${option.text}</strong>
+            <span>${option.detail}</span>
+          </div>
+          <div class="option-score">${option.value}</div>
+        `;
+        container.appendChild(btn);
+      });
+
+      document.getElementById("backBtn").classList.toggle("btn-disabled", currentQuestion === 0);
+      document.getElementById("nextBtn").classList.toggle("btn-disabled", answers[currentQuestion] === null);
+      document.getElementById("nextBtn").innerHTML = currentQuestion === questions.length - 1 ? "Ver mi AI Score™ →" : "Siguiente →";
+    }
+
+    function selectOption(index, value) {
+      answers[currentQuestion] = { index, value };
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (answers[currentQuestion] === null) return;
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+      } else {
+        calculateResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion === 0) return;
+      currentQuestion--;
+      renderQuestion();
+    }
+
+    function calculateResult() {
+      document.getElementById("screenQuiz").classList.add("hidden");
+      document.getElementById("screenLoading").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        const rawScore = answers.reduce((sum, answer) => sum + answer.value, 0);
+        const minRaw = questions.length * 1;
+        const maxRaw = questions.length * 5;
+        const aiScore = Math.round(((rawScore - minRaw) / (maxRaw - minRaw)) * 100);
+        const level = levels.find(l => aiScore >= l.min && aiScore <= l.max);
+
+        resultData = {
+          rawScore,
+          aiScore,
+          levelName: level.name,
+          title: level.title,
+          description: level.description,
+          strengths: level.strengths,
+          opportunities: level.opportunities,
+          date: new Date().toISOString()
+        };
+
+        showDeliveryScreen();
+      }, 1800);
+    }
+
+    function showDeliveryScreen() {
+      document.getElementById("screenLoading").classList.add("hidden");
+      document.getElementById("screenDelivery").classList.remove("hidden");
+      document.getElementById("leadName").value = prospectName;
+      deliveryPreference = "";
+      document.getElementById("deliveryEmail").classList.remove("selected");
+      document.getElementById("deliveryWhatsapp").classList.remove("selected");
+      document.getElementById("deliveryFormTitle").textContent = "Selecciona dónde quieres recibir tu informe";
+      document.getElementById("deliveryFormHelp").textContent = "Todos los campos son obligatorios para generar tu código de diagnóstico.";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function selectDelivery(type) {
+      deliveryPreference = type;
+      document.getElementById("deliveryEmail").classList.toggle("selected", type === "email");
+      document.getElementById("deliveryWhatsapp").classList.toggle("selected", type === "whatsapp");
+
+      if (type === "email") {
+        document.getElementById("deliveryFormTitle").textContent = "Recibir informe por correo";
+        document.getElementById("deliveryFormHelp").textContent = "Completa tus datos. Después podrás recibirlo también en WhatsApp.";
+        document.getElementById("submitLeadBtn").textContent = "Recibir por correo";
+      } else {
+        document.getElementById("deliveryFormTitle").textContent = "Recibir informe por WhatsApp";
+        document.getElementById("deliveryFormHelp").textContent = "Completa tus datos. Tu informe se abrirá por WhatsApp y también quedará asociado al correo registrado como respaldo.";
+        document.getElementById("submitLeadBtn").textContent = "Recibir por WhatsApp";
+      }
+    }
+
+    function submitLeadAndShowResult() {
+      if (!deliveryPreference) {
+        showToast("Selecciona correo o WhatsApp");
+        return;
+      }
+
+      const name = document.getElementById("leadName").value.trim();
+      const whatsapp = document.getElementById("leadWhatsapp").value.trim();
+      const email = document.getElementById("leadEmail").value.trim();
+      const business = document.getElementById("leadBusiness").value.trim();
+      const consent = document.getElementById("leadConsent").checked;
+
+      if (!name || !whatsapp || !email || !business) {
+        showToast("Completa todos los campos");
+        return;
+      }
+
+      if (!consent) {
+        showToast("Acepta recibir tu informe para continuar");
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showToast("Correo no válido");
+        return;
+      }
+
+      generatedCode = createUniqueCode();
+      prospectName = name;
+
+      finalLeadData = {
+        code: generatedCode,
+        name,
+        whatsapp,
+        email,
+        business,
+        preferredChannel: deliveryPreference,
+        score: resultData.aiScore,
+        level: resultData.levelName,
+        rawScore: resultData.rawScore,
+        resultTitle: resultData.title,
+        resultDescription: resultData.description,
+        strengths: resultData.strengths,
+        opportunities: resultData.opportunities,
+        consent: consent,
+        source: "AI_SCORE_WEB",
+        action: "SAVE_AI_SCORE_LEAD",
+        answers: answers.map((a, i) => ({
+          question: questions[i].title,
+          value: a.value,
+          selected: questions[i].options[a.index].text
+        })),
+        createdAt: new Date().toISOString()
+      };
+
+      saveLeadLocal(finalLeadData);
+
+      if (CONFIG.appsScriptUrl) {
+        sendLeadToAppsScript(finalLeadData);
+      }
+
+      document.getElementById("screenDelivery").classList.add("hidden");
+      renderResult();
+    }
+
+    function renderResult() {
+      document.getElementById("screenLoading").classList.add("hidden");
+      document.getElementById("screenResult").classList.remove("hidden");
+      document.getElementById("scoreValue").textContent = resultData.aiScore;
+      document.getElementById("levelPill").textContent = resultData.levelName;
+      document.getElementById("resultTitle").textContent = resultData.title;
+      document.getElementById("resultDescription").textContent = resultData.description;
+      document.getElementById("scoreCircle").style.setProperty("--score-angle", `${resultData.aiScore * 3.6}deg`);
+
+      const strengthsList = document.getElementById("strengthsList");
+      const opportunitiesList = document.getElementById("opportunitiesList");
+      strengthsList.innerHTML = "";
+      opportunitiesList.innerHTML = "";
+
+      resultData.strengths.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        strengthsList.appendChild(li);
+      });
+
+      resultData.opportunities.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        opportunitiesList.appendChild(li);
+      });
+
+      updateFinalDeliveryActions();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateFinalDeliveryActions() {
+      document.getElementById("reportCode").textContent = generatedCode;
+
+      const name = finalLeadData?.name || prospectName || "";
+      const whatsappMessage = encodeURIComponent(
+        `Hola, hice el diagnóstico AI Score™.\n\n` +
+        `Mi código es: ${generatedCode}\n` +
+        `Nombre: ${name}\n` +
+        `Resultado: ${resultData.aiScore}/100 - ${resultData.levelName}\n\n` +
+        `Quiero recibir mi recomendación personalizada de PromptLab Academy.`
+      );
+
+      document.getElementById("whatsappLink").href = `https://wa.me/${CONFIG.whatsappNumber}?text=${whatsappMessage}`;
+
+      if (deliveryPreference === "email") {
+        document.getElementById("finalDeliveryTitle").textContent = "Informe solicitado por correo";
+        document.getElementById("finalDeliveryText").textContent = "Tu informe será enviado al correo registrado. También puedes abrir WhatsApp y enviarnos tu código para recibir orientación inmediata.";
+        document.getElementById("whatsappLink").classList.remove("hidden");
+        document.getElementById("whatsappLink").innerHTML = "Recíbelo también en WhatsApp <span>→</span>";
+      } else {
+        document.getElementById("finalDeliveryTitle").textContent = "Informe solicitado por WhatsApp";
+        document.getElementById("finalDeliveryText").textContent = "Tu informe fue preparado para WhatsApp. Abre la conversación con tu código para recibir orientación inmediata. También enviaremos una copia al correo que registraste.";
+        document.getElementById("whatsappLink").classList.remove("hidden");
+        document.getElementById("whatsappLink").innerHTML = "Abrir WhatsApp con mi código <span>→</span>";
+      }
+    }
+
+    function createUniqueCode() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const random = Math.floor(100000 + Math.random() * 900000);
+      return `PL-${year}-${random}`;
+    }
+
+    function saveLeadLocal(data) {
+      const current = JSON.parse(localStorage.getItem("aiScoreLeads") || "[]");
+      current.push(data);
+      localStorage.setItem("aiScoreLeads", JSON.stringify(current));
+    }
+
+    async function sendLeadToAppsScript(data) {
+      try {
+        await fetch(CONFIG.appsScriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+      } catch (error) {
+        console.warn("No se pudo enviar a Apps Script:", error);
+      }
+    }
+
+    function copyResultSummary() {
+      if (!resultData) return;
+      const text =
+        `Mi AI Score™ es ${resultData.aiScore}/100.\n` +
+        `Nivel: ${resultData.levelName}.\n\n` +
+        `${resultData.description}\n\n` +
+        `Recomendación: mejorar mi uso de IA con PromptLab Academy.`;
+      copyToClipboard(text);
+    }
+
+    function copyReportCode() {
+      if (!generatedCode) return;
+      copyToClipboard(generatedCode);
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => showToast("Copiado"))
+        .catch(() => showToast("No se pudo copiar"));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      answers = new Array(questions.length).fill(null);
+      resultData = null;
+      generatedCode = "";
+
+      prospectName = "";
+      deliveryPreference = "";
+      finalLeadData = null;
+
+      document.getElementById("screenResult").classList.add("hidden");
+      document.getElementById("screenDelivery").classList.add("hidden");
+      document.getElementById("leadName").value = "";
+      document.getElementById("leadWhatsapp").value = "";
+      document.getElementById("leadEmail").value = "";
+      document.getElementById("leadBusiness").value = "";
+      const consentBox = document.getElementById("leadConsent");
+      if (consentBox) consentBox.checked = false;
+      document.getElementById("starterName").value = "";
+      document.getElementById("deliveryEmail").classList.remove("selected");
+      document.getElementById("deliveryWhatsapp").classList.remove("selected");
+      document.body.classList.add("intro-mode");
+      document.getElementById("screenIntro").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
